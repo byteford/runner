@@ -2,6 +2,17 @@
 
 WORKDIR="/src"
 MAKEFILEDIR="/make"
+
+
+#Go versions 
+go1170="runner-go:1.17.0-alpine"
+go1180="runner-go:1.18.0-alpine"
+
+#python versions
+python3110b4="runner-py:3.11.0b4-alpine3.16"
+
+image="alpine"
+
 #fuction that will replace the / with an _ to make it docker name complient (this might need a limit on caracter legnth)
 function get_name () {
     loc=$(pwd)
@@ -11,7 +22,7 @@ function get_name () {
 #function that will start a running container and will tell the user if it is already started (maybe fail silently)
 function start_container(){
     #uses rm to delete the container once finished as the container shouldn't save anything in it
-    docker run -it --detach --rm --name $(get_name) --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" runner-go:1.17.0-alpine
+    docker run -it --detach --rm --name $(get_name) --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" $image
     # if the error code is 125 then the container is already started
     err=$?
     if [ $err -ne 0 ]; then
@@ -52,8 +63,44 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
+
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -v|--version)
+      VERSION="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -l|--language)
+      LANGUAGE="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+
+
 case $1 in 
 "start")
+    if [ -z ${LANGUAGE} ]; then echo "LANGUAGE is unset";exit 1; fi
+    if [ -z ${VERSION} ]; then echo "VERSION is unset";exit 1; fi
+
+    VERSION=${VERSION//['.']/}
+    echo $LANGUAGE$VERSION
+    image=$LANGUAGE$VERSION
+    image=${!image}
     start_container
     shift
     ;;

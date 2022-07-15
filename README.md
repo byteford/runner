@@ -15,7 +15,7 @@ To install the project you just need to add the file to your path
 ## Usage/Examples
 
 ```bash
-runner.sh start
+runner.sh start --language go -version 1.17.0
 runner.sh runner
 runner.sh stop
 ```
