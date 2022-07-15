@@ -5,7 +5,7 @@ This is a simple bash script that can pull down an image, start the container th
 
 ## Installation
 
-To install the project you just need to add the file to your path
+To install the Runner you need to download the runner file and add it to your PATH or save it in your projects location
 
 ```bash
   #From the location you downloaded it

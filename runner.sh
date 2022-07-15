@@ -11,6 +11,9 @@ go1180="runner-go:1.18.0-alpine"
 #python versions
 python3110b4="runner-py:3.11.0b4-alpine3.16"
 
+#Java versions
+java318="runner-java:3-openjdk-18-slim"
+
 image="alpine"
 
 #fuction that will replace the / with an _ to make it docker name complient (this might need a limit on caracter legnth)
