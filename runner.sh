@@ -1,5 +1,37 @@
 #!/bin/bash
 
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+   # Display Help
+   echo "Add description of the script functions here."
+   echo
+   echo "Syntax: runner.sh start|stop|app|<command> [-v|-l]"
+   echo "options:"
+   echo "-l --language     The language the application is writen in"
+   echo "-v --version      The version of the language to use"
+   echo ""
+   echo "Management Commands:"
+   echo "start     Start the container"
+   echo "stop      Stops the container"
+   echo "app       runs commmands direct on the app"
+   echo ""
+   echo "Commands:"
+   echo "run       runs the code within the container"
+}
+
+################################################################################
+################################################################################
+# Main program                                                                 #
+################################################################################
+################################################################################
+
+
+
+
 WORKDIR="/src"
 MAKEFILEDIR="/make"
 
@@ -55,14 +87,13 @@ function run_app_command(){
 }
 
 function run_make_command(){
-    docker exec -it -w $MAKEFILEDIR $(get_name) make $*
+    echo $*
+    docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} $1
 }
 
 #if no errors print out a very basic run funtion
 if [[ $# -eq 0 ]]; then
-    echo start       : starts the runner
-    echo stop        : stopes the runner
-    echo "app <command>  : run the command in the runner"
+    Help
     exit 1
 fi
 
@@ -80,10 +111,6 @@ while [[ $# -gt 0 ]]; do
       LANGUAGE="$2"
       shift # past argument
       shift # past value
-      ;;
-    -*|--*)
-      echo "Unknown option $1"
-      exit 1
       ;;
     *)
       POSITIONAL_ARGS+=("$1") # save positional arg
@@ -116,7 +143,7 @@ case $1 in
     shift
     ;;
 *)
-    run_make_command
+    run_make_command $*
     shift
     ;;
 esac

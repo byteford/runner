@@ -1,3 +1,4 @@
 run:
 	echo "Running"
-	cd ${WORKDIR} && go run .
+	echo "Params: ${PARAMS}"
+	cd ${WORKDIR} && go run . ${PARAMS}

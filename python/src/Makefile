@@ -1,3 +1,4 @@
 run:
 	echo "Running"
-	cd ${WORKDIR} && python .
+	echo ${PARAMS}
+	cd ${WORKDIR} && python ${PARAMS}
