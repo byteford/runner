@@ -35,8 +35,6 @@ Help()
 ################################################################################
 
 
-
-
 WORKDIR="/src"
 MAKEFILEDIR="/make"
 
@@ -70,6 +68,7 @@ function start_container(){
     echo "successfully Started"
 }
 
+#function will stop a running container with the name of the current pwd
 function stop_container(){
     docker stop $(get_name) 
     err=$?
@@ -81,16 +80,18 @@ function stop_container(){
     
 }
 
+#will run a command on the ocntainer
 function run_app_command(){
     docker exec -it -w $WORKDIR $(get_name) $*
 }
 
+#will run a make rule with in the given container
 function run_make_command(){
     echo $*
     docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} ENV=$ENVVARS $1
 }
 
-#if no errors print out a very basic run funtion
+#if no errors print out a very basic help funtion
 if [[ $# -eq 0 ]]; then
     Help
     exit 1
@@ -98,7 +99,6 @@ fi
 
 
 POSITIONAL_ARGS=()
-
 
 
 while [[ $# -gt 0 ]]; do
@@ -141,7 +141,6 @@ case $1 in
     if [ -z ${LANGUAGE} ]; then echo "LANGUAGE is unset";exit 1; fi
     if [ -z ${VERSION} ]; then echo "VERSION is unset";exit 1; fi
 
-    echo $repo_url/runner-$LANGUAGE:$VERSION
     image=$repo_url/runner-$LANGUAGE:$VERSION
     start_container
     shift
