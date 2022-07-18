@@ -29,4 +29,4 @@ build:
 
 docker-build:
 	docker build ./$(src) --build-arg IMAGE_TAG=$(version) -t $(registery)/$(image_name)/$(image):$(version)
-	docker push $(registery)/$(image_name):$(version)
+	docker push $(registery)/$(image_name)/$(image):$(version)
