@@ -27,7 +27,6 @@ build:
 	make build-python 
 	make build-java
 
-docker-build:$(repo_url)/$(image):$(version)
-	echo
+docker-build:
 	docker build ./$(src) --build-arg IMAGE_TAG=$(version) -t $(repo_url)/$(image):$(version)
 	docker push $(registery)/$(image):$(version)
