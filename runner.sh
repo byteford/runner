@@ -35,16 +35,17 @@ Help()
 WORKDIR="/src"
 MAKEFILEDIR="/make"
 
+repo_url="ghcr.io/byteford/runner"
 
 #Go versions 
-go1170="runner-go:1.17.0-alpine"
-go1180="runner-go:1.18.0-alpine"
+go1170="$repo_url/runner-go:1.17.0-alpine"
+go1180="$repo_url/runner-go:1.18.0-alpine"
 
 #python versions
-python3110b4="runner-py:3.11.0b4-alpine3.16"
+python3110b4="$repo_url/runner-py:3.11.0b4-alpine3.16"
 
 #Java versions
-java318="runner-java:3-openjdk-18-slim"
+java318="$repo_url/runner-java:3-openjdk-18-slim"
 
 image="alpine"
 
@@ -56,6 +57,7 @@ function get_name () {
 
 #function that will start a running container and will tell the user if it is already started (maybe fail silently)
 function start_container(){
+    echo $image
     #uses rm to delete the container once finished as the container shouldn't save anything in it
     docker run -it --detach --rm --name $(get_name) --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" $image
     # if the error code is 125 then the container is already started
