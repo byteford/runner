@@ -1,17 +1,32 @@
-go_versions := 	1.17.0 \
-				1.18.0
+go_versions := 	1.17.0-alpine \
+				1.18.0-alpine
 
 py_versions := 3.11.0b4-alpine3.16
 
 java_versions := 3-openjdk-18-slim
 
+registery=ghcr.io
+image_name=byteford/runner
+
+
+src = 
+version =
+image = 
+
 build-go:
-	$(foreach version,$(go_versions),docker build ./go --build-arg $(version) -t runner-go:$(version)-alpine;)
+	$(foreach version,$(go_versions),make docker-build src=go version=$(version) image=runner-go;)
 
 build-python:
-	$(foreach version,$(py_versions),docker build ./python --build-arg $(version) -t runner-py:$(version);)
+	$(foreach version,$(py_versions),make docker-build src=python version=$(version) image=runner-py;)
 
 build-java:
-	$(foreach version,$(java_versions),docker build ./java --build-arg $(version) -t runner-java:$(version);)
+	$(foreach version,$(java_versions),make docker-build src=java version=$(version) image=runner-java;)
 
-build: build-go build-python build-java
+build: 
+	make build-go 
+	make build-python 
+	make build-java
+
+docker-build:
+	docker build ./$(src) --build-arg IMAGE_TAG=$(version) -t $(registery)/$(image_name)/$(image):$(version)
+	docker push $(registery)/$(image_name)/$(image):$(version)
