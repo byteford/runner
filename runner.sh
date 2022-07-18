@@ -35,18 +35,11 @@ Help()
 WORKDIR="/src"
 MAKEFILEDIR="/make"
 
-
-#Go versions 
-go1170="runner-go:1.17.0-alpine"
-go1180="runner-go:1.18.0-alpine"
-
-#python versions
-python3110b4="runner-py:3.11.0b4-alpine3.16"
-
-#Java versions
-java318="runner-java:3-openjdk-18-slim"
+repo_url="ghcr.io/byteford/runner"
 
 image="alpine"
+
+ENVVARS=()
 
 #fuction that will replace the / with an _ to make it docker name complient (this might need a limit on caracter legnth)
 function get_name () {
@@ -56,6 +49,7 @@ function get_name () {
 
 #function that will start a running container and will tell the user if it is already started (maybe fail silently)
 function start_container(){
+    echo $image
     #uses rm to delete the container once finished as the container shouldn't save anything in it
     docker run -it --detach --rm --name $(get_name) --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" $image
     # if the error code is 125 then the container is already started
@@ -88,7 +82,7 @@ function run_app_command(){
 
 function run_make_command(){
     echo $*
-    docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} $1
+    docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} ENV=$ENVVARS $1
 }
 
 #if no errors print out a very basic run funtion
@@ -112,6 +106,11 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    -e|--enviroment)
+      ENVVARS+=("$2")
+      shift
+      shift
+      ;;
     *)
       POSITIONAL_ARGS+=("$1") # save positional arg
       shift # past argument
@@ -121,16 +120,14 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-
+echo $ENVVARS
 case $1 in 
 "start")
     if [ -z ${LANGUAGE} ]; then echo "LANGUAGE is unset";exit 1; fi
     if [ -z ${VERSION} ]; then echo "VERSION is unset";exit 1; fi
 
-    VERSION=${VERSION//['.']/}
-    echo $LANGUAGE$VERSION
-    image=$LANGUAGE$VERSION
-    image=${!image}
+    echo $repo_url/runner-$LANGUAGE:$VERSION
+    image=$repo_url/runner-$LANGUAGE:$VERSION
     start_container
     shift
     ;;
