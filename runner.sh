@@ -11,8 +11,13 @@ Help()
    echo
    echo "Syntax: runner.sh start|stop|app|<command> [-v|-l]"
    echo "options:"
+   echo "-h --help         Displays this message"
+   echo "Start time:"
    echo "-l --language     The language the application is writen in"
    echo "-v --version      The version of the language to use"
+   echo "-p --publish      This creates a firewall rule which maps a container port to a port on the Docker host to the outside world."
+   echo "Run time:"
+   echo "-e --enviroment   Specify an environemnt variable to run the code with"
    echo ""
    echo "Management Commands:"
    echo "start     Start the container"
@@ -51,7 +56,7 @@ function get_name () {
 function start_container(){
     echo $image
     #uses rm to delete the container once finished as the container shouldn't save anything in it
-    docker run -it --detach --rm --name $(get_name) --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" $image
+    docker run -it --detach --rm --name $(get_name) $PUBLISH --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" $image
     # if the error code is 125 then the container is already started
     err=$?
     if [ $err -ne 0 ]; then
@@ -94,6 +99,8 @@ fi
 
 POSITIONAL_ARGS=()
 
+
+
 while [[ $# -gt 0 ]]; do
   case $1 in
     -v|--version)
@@ -111,6 +118,15 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
+    -p|--publish)
+      PUBLISH+="--publish $2"
+      shift
+      shift
+      ;;
+    -h| --help)
+      Help
+      exit 0
+      ;;
     *)
       POSITIONAL_ARGS+=("$1") # save positional arg
       shift # past argument
@@ -120,7 +136,6 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-echo $ENVVARS
 case $1 in 
 "start")
     if [ -z ${LANGUAGE} ]; then echo "LANGUAGE is unset";exit 1; fi
