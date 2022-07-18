@@ -1,6 +1,6 @@
-ARG IMAGE_TAG=1.17.0-alpine
-FROM golang:${IMAGE_TAG}
+ARG IMAGE_TAG
+FROM golang:${IMAGE_TAG}-alpine
 
-RUN apk add --update make
+RUN apk add --update make git gcc g++
 
 COPY /src /make

@@ -1,5 +1,5 @@
-ARG IMAGE_TAG=3-openjdk-18-slim
-FROM maven:${IMAGE_TAG}
+ARG IMAGE_TAG
+FROM maven:3-openjdk-${IMAGE_TAG}-slim
 
 RUN apt-get update
 RUN apt-get -y install make
