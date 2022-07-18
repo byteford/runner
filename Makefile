@@ -28,5 +28,5 @@ build:
 	make build-java
 
 docker-build:
-	docker build ./$(src) --build-arg IMAGE_TAG=$(version) -t $(registery)/$(image)/$(image):$(version)
-	docker push $(registery)/$(image):$(version)
+	docker build ./$(src) --build-arg IMAGE_TAG=$(version) -t $(registery)/$(image_name)/$(image):$(version)
+	docker push $(registery)/$(image_name):$(version)
