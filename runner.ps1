@@ -3,7 +3,8 @@
     [Parameter(ValueFromRemainingArguments)][string[]] $params,
     [Alias("l")][string]$language,
     [Alias("v")][string]$version,
-    [Alias("p")][string[]]$publish
+    [Alias("p")][string[]]$publish,
+    [Alias("e")][string[]]$enviroment
 )
 
 $WORKDIR="/src"
@@ -19,10 +20,12 @@ function get_name{
 }
 
 function start_container{
-    $image
-    echo ($pwd -replace "Z:\\","\\\\Mac\\Home"):$WORKDIR
-    $pub = "--publish $publish"
-    docker run -it --detach --rm --name $(get_name) --publish "$publish" --volume ${pwd}:$WORKDIR --env WORKDIR=$WORKDIR $image
+    if ($publish -ne $null){
+        $pre = "-p"
+    }
+    $env = "--env " + $enviroment -join "--env "
+    echo $env
+    docker run -it --detach --rm --name $(get_name) $pre "$publish" --volume ${pwd}:$WORKDIR --env WORKDIR=$WORKDIR $env $image
 }
 
 function stop_container{
