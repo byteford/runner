@@ -16,6 +16,9 @@ Help()
    echo "-l --language     The language the application is writen in"
    echo "-v --version      The version of the language to use"
    echo "-p --publish      This creates a firewall rule which maps a container port to a port on the Docker host to the outside world."
+   echo "-e --enviroment   Specify an environemnt variable to run the container with"
+   echo "-w --workdir      Set if you want to copy in your local folder, but run commands on a sub-folder"
+
    echo "Run time:"
    echo "-e --enviroment   Specify an environemnt variable to run the code with"
    echo ""
@@ -34,9 +37,6 @@ Help()
 ################################################################################
 ################################################################################
 
-declare "default_go=1.18.0"
-declare "defaultpython=3.11.0b4"
-declare "defaultjava=18"
 
 WORKDIR="/src"
 MAKEFILEDIR="/make"
@@ -97,27 +97,48 @@ function run_make_command(){
 }
 #Work out language based on file extention
 function LangCalc(){
-for i in *.go; do
-    [ -f "$i" ] || break
-    LANGUAGE=go
-    return
-done
-for i in *.py; do
-    [ -f "$i" ] || break
-    LANGUAGE=python
-    return
-done
-for i in *.java; do
-    [ -f "$i" ] || break
+  for i in *.go; do
+      [ -f "$i" ] || break
+      LANGUAGE=go
+      return
+  done
+  for i in *.py; do
+      [ -f "$i" ] || break
+      LANGUAGE=python
+      return
+  done
+  for i in *.java; do
+      [ -f "$i" ] || break
+      LANGUAGE=java
+      return
+  done
+  if [ -f "pom.xml" ]; then
     LANGUAGE=java
     return
-done
-if [ -f "pom.xml" ]; then
-  LANGUAGE=java
-  return
-fi
+  fi
+
 }
 
+function VersionCalc(){
+  case $LANGUAGE in
+    go)
+      VERSION="1.18.0"
+      return
+    ;;
+    java)
+      VERSION="1.18.0"
+      return
+    ;;
+    python)
+      VERSION="1.18.0"
+      return
+    ;;
+    *)
+     echo "default version not found"
+     exit 1
+    ;;
+  esac
+}
 
 #if no errors print out a very basic help funtion
 if [[ $# -eq 0 ]]; then
@@ -175,11 +196,10 @@ echo "${ENVVARS[@]}"
 case $1 in 
 "start")
     if [ -z ${LANGUAGE} ]; then 
-      LangCalc
+      LangCalc #gets the language by looks like the local files
     fi
     if [ -z ${VERSION} ]; then 
-    var=default_$LANGUAGE
-    VERSION=${!var}
+      VersionCalc #get a default version based on language
     fi
 
     image=$repo_url/runner-$LANGUAGE:$VERSION
