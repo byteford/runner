@@ -1,3 +1,4 @@
+
 run:
 	echo "Running"
 	echo "Params: ${PARAMS}"
@@ -8,4 +9,4 @@ test:
 	echo "Running"
 	echo "Params: ${PARAMS}"
 	echo "ENV: ${ENV}"
-	cd ${WORKDIR} && ${ENV} go test . ${PARAMS}
+	cd ${WORKDIR} && ${ENV} go test . -v ${PARAMS}

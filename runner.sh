@@ -34,6 +34,9 @@ Help()
 ################################################################################
 ################################################################################
 
+declare "default_go=1.18.0"
+declare "defaultpython=3.11.0b4"
+declare "defaultjava=18"
 
 WORKDIR="/src"
 MAKEFILEDIR="/make"
@@ -53,8 +56,10 @@ function get_name () {
 #function that will start a running container and will tell the user if it is already started (maybe fail silently)
 function start_container(){
     echo $image
+    ENV="${ENVVARS[@]/#/--env }"
+    echo $ENV
     #uses rm to delete the container once finished as the container shouldn't save anything in it
-    docker run -it --detach --rm --name $(get_name) $PUBLISH --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR" $image
+    docker run -it --detach --rm --name $(get_name) $PUBLISH --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR/$WORKDIRSUFFIX" $ENV $image
     # if the error code is 125 then the container is already started
     err=$?
     if [ $err -ne 0 ]; then
@@ -88,8 +93,31 @@ function run_app_command(){
 #will run a make rule with in the given container
 function run_make_command(){
     echo $*
-    docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} ENV=$ENVVARS $1
+    docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} ENV="${ENVVARS[*]}" $1
 }
+#Work out language based on file extention
+function LangCalc(){
+for i in *.go; do
+    [ -f "$i" ] || break
+    LANGUAGE=go
+    return
+done
+for i in *.py; do
+    [ -f "$i" ] || break
+    LANGUAGE=python
+    return
+done
+for i in *.java; do
+    [ -f "$i" ] || break
+    LANGUAGE=java
+    return
+done
+if [ -f "pom.xml" ]; then
+  LANGUAGE=java
+  return
+fi
+}
+
 
 #if no errors print out a very basic help funtion
 if [[ $# -eq 0 ]]; then
@@ -115,11 +143,17 @@ while [[ $# -gt 0 ]]; do
       ;;
     -e|--enviroment)
       ENVVARS+=("$2")
+      echo "set $2"
       shift
       shift
       ;;
     -p|--publish)
       PUBLISH+="--publish $2"
+      shift
+      shift
+      ;;
+    -w|--workdir)
+      WORKDIRSUFFIX+="$2"
       shift
       shift
       ;;
@@ -136,10 +170,17 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
+echo "${ENVVARS[@]}"
+
 case $1 in 
 "start")
-    if [ -z ${LANGUAGE} ]; then echo "LANGUAGE is unset";exit 1; fi
-    if [ -z ${VERSION} ]; then echo "VERSION is unset";exit 1; fi
+    if [ -z ${LANGUAGE} ]; then 
+      LangCalc
+    fi
+    if [ -z ${VERSION} ]; then 
+    var=default_$LANGUAGE
+    VERSION=${!var}
+    fi
 
     image=$repo_url/runner-$LANGUAGE:$VERSION
     start_container
