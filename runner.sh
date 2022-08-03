@@ -112,6 +112,11 @@ function LangCalc(){
       LANGUAGE=java
       return
   done
+  for i in *.cs; do
+      [ -f "$i" ] || break
+      LANGUAGE=cs
+      return
+  done
   if [ -f "pom.xml" ]; then
     LANGUAGE=java
     return
@@ -131,6 +136,10 @@ function VersionCalc(){
     ;;
     python)
       VERSION="1.18.0"
+      return
+    ;;
+    cs)
+      VERSION="6.0"
       return
     ;;
     *)
