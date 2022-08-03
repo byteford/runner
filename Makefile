@@ -7,7 +7,8 @@ image =
 lang := go \
 		java \
 		python \
-		cs
+		cs \
+		js
 
 getVersions:
 # will pull all versions of go - this might not be a good idea

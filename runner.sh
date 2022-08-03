@@ -117,6 +117,10 @@ function LangCalc(){
       LANGUAGE=cs
       return
   done
+  if [ -f "package.json" ]; then
+      LANGUAGE=js
+      return
+  fi
   if [ -f "pom.xml" ]; then
     LANGUAGE=java
     return
@@ -131,15 +135,19 @@ function VersionCalc(){
       return
     ;;
     java)
-      VERSION="1.18.0"
+      VERSION="18"
       return
     ;;
     python)
-      VERSION="1.18.0"
+      VERSION="3.11.0b4"
       return
     ;;
     cs)
       VERSION="6.0"
+      return
+    ;;
+    js)
+      VERSION="18"
       return
     ;;
     *)
