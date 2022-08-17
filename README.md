@@ -15,8 +15,8 @@ To install the Runner you need to download the runner file and add it to your PA
 ## Usage/Examples
 
 ```bash
-runner.sh start --language go -version 1.17.0
-runner.sh runner
+runner.sh start --language go --version 1.17.0
+runner.sh run
 runner.sh stop
 ```
 
