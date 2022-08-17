@@ -8,7 +8,8 @@ lang := go \
 		java \
 		python \
 		cs \
-		js
+		js \
+		terraform
 
 getVersions:
 # will pull all versions of go - this might not be a good idea

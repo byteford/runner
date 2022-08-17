@@ -117,6 +117,11 @@ function LangCalc(){
       LANGUAGE=cs
       return
   done
+  for i in *.tf; do
+      [ -f "$i" ] || break
+      LANGUAGE=terraform
+      return
+  done
   if [ -f "package.json" ]; then
       LANGUAGE=js
       return
@@ -148,6 +153,10 @@ function VersionCalc(){
     ;;
     js)
       VERSION="18"
+      return
+    ;;
+    terraform)
+      VERSION="1.2.7"
       return
     ;;
     *)
