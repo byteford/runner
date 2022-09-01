@@ -109,7 +109,7 @@ function LangCalc(){
   done
   for i in *.java; do
       [ -f "$i" ] || break
-      LANGUAGE=java
+      LANGUAGE=maven
       return
   done
   for i in *.cs; do
@@ -127,10 +127,9 @@ function LangCalc(){
       return
   fi
   if [ -f "pom.xml" ]; then
-    LANGUAGE=java
+    LANGUAGE=maven
     return
   fi
-
 }
 
 function VersionCalc(){
@@ -139,7 +138,7 @@ function VersionCalc(){
       VERSION="1.18.0"
       return
     ;;
-    java)
+    maven)
       VERSION="18"
       return
     ;;

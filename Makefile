@@ -5,7 +5,7 @@ src =
 version =
 image = 
 lang := go \
-		java \
+		maven \
 		python \
 		cs \
 		js \
