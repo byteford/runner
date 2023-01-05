@@ -19,8 +19,8 @@ fmt:
 	echo ${PARAMS}
 	cd ${WORKDIR} && terraform fmt ${PARAMS}
 
-tflint:
+lint:
 	echo "Running"
 	echo ${PARAMS}
-	cd ${WORKDIR} && tflint --init
-	cd ${WORKDIR} && tflint ${PARAMS}
+	tflint --chdir=${WORKDIR} --init
+	tflint --chdir=${WORKDIR} ${PARAMS}
