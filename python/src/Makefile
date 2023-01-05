@@ -1,7 +1,7 @@
 setup:
 	echo "Setup"
 	echo ${PARAMS}
-	cd ${WORKDIR} && python -m pip install -r requirements.txt
+	cd ${WORKDIR} && python -m pip install -r ${PARAMS}requirements.txt
 
 run:
 	echo "Running"
@@ -12,8 +12,8 @@ run:
 lint: 
 	echo "Lint"
 	echo ${PARAMS}
-	cd ${WORKDIR} && python -m pip install pylint
-	cd ${WORKDIR} && python -m pylint ${PARAMS}
+	cd ${WORKDIR} && python -m pip install flake8
+	cd ${WORKDIR} && python -m flake8 ${PARAMS}
 
 test:
 	echo "Test"
