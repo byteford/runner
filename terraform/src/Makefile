@@ -1,3 +1,7 @@
+login:
+	echo "login"
+	echo ${PARAMS}
+	cd ${WORKDIR} && terraform login ${PARAMS}
 init:
 	echo "init"
 	echo ${PARAMS}
