@@ -6,4 +6,4 @@ setup:
 run:
 	echo "Running"
 	echo ${PARAMS}
-	cd ${WORKDIR} && ansible-playbook -i inventory main.py ${PARAMS}
+	cd ${WORKDIR} && ansible-playbook -i inventory main.yaml ${PARAMS}

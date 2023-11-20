@@ -134,6 +134,10 @@ function LangCalc(){
     LANGUAGE=maven
     return
   fi
+  if [ -f "main.yaml" ]; then
+    LANGUAGE=ansible
+    return
+  fi
 }
 
 function VersionCalc(){
