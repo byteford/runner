@@ -164,6 +164,7 @@ function VersionCalc(){
     ;;
     ansible)
       VERSION="8.6.1"
+    ;;
     *)
      echo "default version not found"
      exit 1
