@@ -9,7 +9,11 @@ lang := go \
 		python \
 		cs \
 		js \
-		terraform
+		terraform \
+		ansible
+
+.PHONY:
+	build
 
 getVersions:
 # will pull all versions of go - this might not be a good idea

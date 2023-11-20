@@ -18,6 +18,7 @@ To install the Runner you need to download the runner file and add it to your PA
 runner.sh start --language go --version 1.17.0
 runner.sh run
 runner.sh stop
+runner.sh start -l ansible -v 8.6.1 -m ~/.ssh:/root/.ssh;
 ```
 
 ## Contributing

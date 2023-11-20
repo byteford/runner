@@ -17,6 +17,7 @@ Help()
    echo "-v --version      The version of the language to use"
    echo "-p --publish      This creates a firewall rule which maps a container port to a port on the Docker host to the outside world."
    echo "-e --enviroment   Specify an environemnt variable to run the container with"
+   echo "-m --mount        Specify a volume to mount in to the docker image"
    echo "-w --workdir      Set if you want to copy in your local folder, but run commands on a sub-folder"
 
    echo "Run time:"
@@ -46,6 +47,7 @@ repo_url="ghcr.io/byteford/runner"
 image="alpine"
 
 ENVVARS=()
+MOUNTS=()
 
 #fuction that will replace the / with an _ to make it docker name complient (this might need a limit on caracter legnth)
 function get_name () {
@@ -58,8 +60,10 @@ function start_container(){
     echo $image
     ENV="${ENVVARS[@]/#/--env }"
     echo $ENV
+    VOLUMES="${MOUNTS[@]/#/--volume }"
+    echo $VOLUMES
     #uses rm to delete the container once finished as the container shouldn't save anything in it
-    docker run -it --detach --rm --name $(get_name) $PUBLISH --volume $(pwd):$WORKDIR --env "WORKDIR=$WORKDIR/$WORKDIRSUFFIX" $ENV $image
+    docker run -it --detach --rm --name $(get_name) $PUBLISH --volume $(pwd):$WORKDIR $VOLUMES --env "WORKDIR=$WORKDIR/$WORKDIRSUFFIX" $ENV $image
     # if the error code is 125 then the container is already started
     err=$?
     if [ $err -ne 0 ]; then
@@ -158,6 +162,8 @@ function VersionCalc(){
       VERSION="1.2.7"
       return
     ;;
+    ansible)
+      VERSION="8.6.1"
     *)
      echo "default version not found"
      exit 1
@@ -189,6 +195,12 @@ while [[ $# -gt 0 ]]; do
       ;;
     -e|--enviroment)
       ENVVARS+=("$2")
+      echo "set $2"
+      shift
+      shift
+      ;;
+    -m|--mount)
+      MOUNTS+=("$2")
       echo "set $2"
       shift
       shift
