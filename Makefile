@@ -10,7 +10,9 @@ lang := go \
 		cs \
 		js \
 		terraform \
-		ansible
+		ansible \
+		k8s \
+		ubuntu
 
 .PHONY:
 	build

@@ -169,6 +169,12 @@ function VersionCalc(){
     ansible)
       VERSION="8.6.1"
     ;;
+    k8s)
+      VERSION="1.29"
+    ;;
+    ubuntu)
+      VERSION="24.10"
+    ;;
     *)
      echo "default version not found"
      exit 1
