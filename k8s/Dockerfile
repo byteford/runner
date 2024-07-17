@@ -4,7 +4,7 @@ FROM bitnami/kubectl:${IMAGE_TAG}
 USER root:root
 
 RUN apt-get update
-RUN apt-get -y install make
+RUN apt-get -y install make curl
 
 USER 1001:1001
 
