@@ -63,7 +63,7 @@ function start_container(){
     VOLUMES="${MOUNTS[@]/#/--volume }"
     echo $VOLUMES
     #uses rm to delete the container once finished as the container shouldn't save anything in it
-    docker run -it --detach --rm --name $(get_name) $PUBLISH --volume $(pwd):$WORKDIR $VOLUMES --env "WORKDIR=$WORKDIR/$WORKDIRSUFFIX" $ENV $image
+    docker run -it --detach --rm --name $(get_name) $PUBLISH --network host --volume $(pwd):$WORKDIR $VOLUMES --env "WORKDIR=$WORKDIR/$WORKDIRSUFFIX" $ENV $image
     # if the error code is 125 then the container is already started
     err=$?
     if [ $err -ne 0 ]; then
@@ -97,7 +97,7 @@ function run_app_command(){
 #will run a make rule with in the given container
 function run_make_command(){
     echo $*
-    docker exec -it -w $MAKEFILEDIR $(get_name) make PARAMS=${@:2} ENV="${ENVVARS[*]}" $1
+    docker exec -it -w $MAKEFILEDIR $(get_name) make "PARAMS=${*:2}" "ENV=${ENVVARS[*]}" $1
 }
 #Work out language based on file extention
 function LangCalc(){
@@ -174,6 +174,9 @@ function VersionCalc(){
     ;;
     ubuntu)
       VERSION="24.10"
+    ;;
+    crossplane)
+      VERSION="v1.16.0"
     ;;
     *)
      echo "default version not found"

@@ -12,7 +12,8 @@ lang := go \
 		terraform \
 		ansible \
 		k8s \
-		ubuntu
+		ubuntu \
+		crossplane
 
 .PHONY:
 	build
